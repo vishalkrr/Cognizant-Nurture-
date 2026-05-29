@@ -799,6 +799,215 @@ public class TransactionDemo {
 }
 
 Program 34: Java Modules
+module-info.java (com.utils)
+module com.utils {
+    exports com.utils;
+}
+
+Utility.java
+package com.utils;
+
+public class Utility {
+    public static void display() {
+        System.out.println("Utility Module");
+    }
+}
+
+Main.java
+package com.greetings;
+
+import com.utils.Utility;
+
+public class Main {
+    public static void main(String[] args) {
+        Utility.display();
+    }
+}
+
+Program 35: TCP Server
+import java.io.*;
+import java.net.*;
+
+public class Server {
+    public static void main(String[] args)
+            throws Exception {
+
+        ServerSocket server =
+                new ServerSocket(5000);
+
+        Socket socket = server.accept();
+
+        DataInputStream dis =
+                new DataInputStream(socket.getInputStream());
+
+        System.out.println("Client: " +
+                dis.readUTF());
+
+        socket.close();
+        server.close();
+    }
+}
+TCP Client
+import java.io.*;
+import java.net.*;
+
+public class Client {
+    public static void main(String[] args)
+            throws Exception {
+
+        Socket socket =
+                new Socket("localhost", 5000);
+
+        DataOutputStream dos =
+                new DataOutputStream(socket.getOutputStream());
+
+        dos.writeUTF("Hello Server");
+
+        socket.close();
+    }
+}
+
+Program 36: HTTP Client API
+import java.net.URI;
+import java.net.http.*;
+
+public class HttpClientDemo {
+    public static void main(String[] args)
+            throws Exception {
+
+        HttpClient client =
+                HttpClient.newHttpClient();
+
+        HttpRequest request =
+                HttpRequest.newBuilder()
+                        .uri(URI.create(
+                                "https://api.github.com"))
+                        .build();
+
+        HttpResponse<String> response =
+                client.send(
+                        request,
+                        HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("Status Code: "
+                + response.statusCode());
+
+        System.out.println(response.body());
+    }
+}
+
+Program 37: Using javap to Inspect Bytecode
+public class BytecodeDemo {
+
+    public void display() {
+        System.out.println("Hello Java");
+    }
+
+    public static void main(String[] args) {
+        new BytecodeDemo().display();
+    }
+}
+
+Program 38: Decompile a Class File
+public class DecompileDemo {
+
+    public static void main(String[] args) {
+        System.out.println("This class will be decompiled.");
+    }
+}
+
+Program 39: Reflection in Java
+import java.lang.reflect.Method;
+
+class Student {
+
+    public void show() {
+        System.out.println("Reflection Example");
+    }
+}
+
+public class ReflectionDemo {
+
+    public static void main(String[] args)
+            throws Exception {
+
+        Class<?> cls =
+                Class.forName("Student");
+
+        Method[] methods =
+                cls.getDeclaredMethods();
+
+        for (Method m : methods) {
+            System.out.println(m.getName());
+        }
+
+        Object obj =
+                cls.getDeclaredConstructor()
+                        .newInstance();
+
+        Method method =
+                cls.getMethod("show");
+
+        method.invoke(obj);
+    }
+}
+
+Program 40: Virtual Threads
+public class VirtualThreadsDemo {
+
+    public static void main(String[] args) {
+
+        long startTime = System.currentTimeMillis();
+
+        for (int i = 1; i <= 100000; i++) {
+            int taskId = i;
+
+            Thread.startVirtualThread(() -> {
+                System.out.println("Virtual Thread: " + taskId);
+            });
+        }
+
+        long endTime = System.currentTimeMillis();
+
+        System.out.println(
+                "Time Taken: "
+                        + (endTime - startTime)
+                        + " ms");
+    }
+}
+
+Program 41: Executor Service and Callable
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
+
+public class ExecutorCallableDemo {
+
+    public static void main(String[] args)
+            throws Exception {
+
+        ExecutorService executor =
+                Executors.newFixedThreadPool(3);
+
+        List<Callable<Integer>> tasks =
+                new ArrayList<>();
+
+        tasks.add(() -> 10 + 20);
+        tasks.add(() -> 30 + 40);
+        tasks.add(() -> 50 + 60);
+
+        List<Future<Integer>> results =
+                executor.invokeAll(tasks);
+
+        for (Future<Integer> result : results) {
+            System.out.println(
+                    "Result: " + result.get());
+        }
+
+        executor.shutdown();
+    }
+}
+
 
 
 
